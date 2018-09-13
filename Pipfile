@@ -4,6 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+"oauth2client" = "*"
+"httplib2" = "*"
+requests = "*"
+requests-oauthlib = "*"
+oauthlib = "*"
 
 [dev-packages]
 
