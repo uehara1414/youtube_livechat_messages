@@ -14,13 +14,20 @@ class Author:
         self.raw_json = author_json
 
         self.channel_id = self.raw_json['channelId']
-        self.channel_url = self.raw_json['channel_url']
-        self.display_name = self.raw_json['display_name']
-        self.profile_image_url = self.raw_json['profile_image_url']
+        self.channel_url = self.raw_json['channelUrl']
+        self.display_name = self.raw_json['displayName']
+        self.profile_image_url = self.raw_json['profileImageUrl']
         self.is_verified = self.raw_json['isVerified']
         self.is_chat_owner = self.raw_json['isChatOwner']
         self.is_chat_sponsor = self.raw_json['isChatSponsor']
         self.is_chat_moderator = self.raw_json['isChatModerator']
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return f'Author({self.display_name})'
+
 
 
 class LiveChatItem:
@@ -58,4 +65,7 @@ class LiveChatItem:
         return self.published_at < other.published_at
 
     def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
         return f'LiveChatItem({self.type}: "{self.display_message}")'

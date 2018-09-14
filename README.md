@@ -23,8 +23,12 @@ for item in api.cursor(video_id=os.getenv('VIDEO_ID')):
 
 ## Todo
 - [ ] 動画終了時の処理
+- [ ] 認証部分の依存先からoauth2clientを外す(oauth2client is now deprecated.)
+- [ ] テキスト・投げ銭・スーパーチャット以外のイベントへの対応
 
 ## Contributing
 個人的に必要な状況で十分に使える程度の実装しかしていません。
+
 足りない機能、不具合などたくさん有るかと思うので、バグ報告・要望・修正はIssues, PullRequests にお気軽に。
+
 気づいていないようであれば [uehara1414](https://twitter.com/uehara1414/)にDMかメンションしてください。

@@ -1,4 +1,4 @@
-from youtube_livechat_messages.cursor import LiveChatMessageCursor
+from youtube_livechat_messages.cursor import LiveChatEventCursor
 from youtube_livechat_messages.auth import auto_refresh
 
 import requests
@@ -33,7 +33,7 @@ class API:
         live_chat_id = live_chat_id or self.get_live_chat_id(video_id=video_id, channel_id=channel_id)
         api_request = APIRequest(self, params={'part': 'snippet,authorDetails,id', 'liveChatId': live_chat_id})
 
-        return LiveChatMessageCursor(api_request, raw=raw)
+        return LiveChatEventCursor(api_request, raw=raw)
 
     def get_live_chat_id(self, video_id=None, channel_id=None):
         if not video_id and not channel_id:
@@ -66,7 +66,7 @@ class API:
 
         try:
             return res.json()['items'][0]['liveStreamingDetails']['activeLiveChatId']
-        except IndexError:
+        except (IndexError, KeyError):
             raise RuntimeError('The LiveChat Not Found.')
 
 
@@ -94,5 +94,5 @@ class APIRequest:
         res = requests.get(self.url, params=self.params, headers=self.headers)
 
         if not res.ok:
-            raise RuntimeError()
+            raise RuntimeError(res.text)
         return res

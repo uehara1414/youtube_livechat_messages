@@ -5,7 +5,7 @@ import itertools
 from youtube_livechat_messages.models import LiveChatItem
 
 
-class LiveChatMessageCursor:
+class LiveChatEventCursor:
 
     def __init__(self, request, raw=False):
         self.request = request
@@ -13,12 +13,12 @@ class LiveChatMessageCursor:
         self.index = None
         self._items = collections.OrderedDict()
 
-        self.update_comments()
+        self.update_events()
 
         if self._items:
             self.index = list(self._items.keys())[0]
 
-    def update_comments(self):
+    def update_events(self):
         res = self.request.call()
 
         for item in res.json()['items']:
@@ -32,7 +32,7 @@ class LiveChatMessageCursor:
                     self.index = list(self._items.keys())[0]
                     return
                 else:
-                    self.update_comments()
+                    self.update_events()
                     time.sleep(1)
             else:
                 return
@@ -51,12 +51,12 @@ class LiveChatMessageCursor:
                 return item
             except StopIteration:
                 time.sleep(1)
-                self.update_comments()
+                self.update_events()
 
     def __next__(self):
         if not self._items:
             time.sleep(1)
-            self.update_comments()
+            self.update_events()
 
         self.wait_while_index_set()
 
