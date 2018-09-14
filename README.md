@@ -84,6 +84,7 @@ for event in api.cursor(video_id=os.getenv('VIDEO_ID')).raw().events():
 - is_chat_moderator
 
 ## Todo
+- [ ] テストの追加
 - [ ] 動画終了時の処理
 - [ ] 認証部分の依存先からoauth2clientを外す(oauth2client is now deprecated.)
 - [ ] テキスト・投げ銭・スーパーチャット以外のイベントへの対応
