@@ -6,19 +6,17 @@ from oauth2client.file import Storage
 import requests
 
 
-def get_access_token():
-    return get_credentials().access_token
+def get_access_token(client_secret_path='client_secret.json', credentials_path='credentials.json'):
+    return get_credentials(client_secret_path, credentials_path).access_token
 
 
-def get_credentials():
-    credentials_path = "credentials.json"
+def get_credentials(client_secret_path='client_secret.json', credentials_path='credentials.json'):
     storage = Storage(credentials_path)
     credentials = storage.get()
 
     if credentials is None or credentials.invalid:
-        f = 'client_secret.json'
         scope = "https://www.googleapis.com/auth/youtube.readonly"
-        flow = client.flow_from_clientsecrets(f, scope)
+        flow = client.flow_from_clientsecrets(client_secret_path, scope)
         flow.user_agent = "hoge"
         credentials = tools.run_flow(flow, Storage(credentials_path))
 

@@ -29,8 +29,7 @@ class Author:
         return f'Author({self.display_name})'
 
 
-
-class LiveChatItem:
+class LiveChatEvent:
 
     def __init__(self, item_json):
         self.raw_json = item_json
@@ -60,6 +59,28 @@ class LiveChatItem:
             return self.raw_json['snippet']['displayMessage']
         else:
             return ''
+
+    @property
+    def amount_micros(self) -> int:
+        # 200000000
+        return self.details['amountMicros']
+
+    @property
+    def currency(self) -> str:
+        # "JPY"
+        return self.details['currency']
+
+    @property
+    def amount_display_string(self):
+        # "¥200"
+        return self.details['amountDisplayString']
+
+    @property
+    def user_comment(self):
+        # "おめでとうございます"
+        if 'userComment' in self.details:
+            return self.details['userComment']
+        return ''
 
     def __lt__(self, other):
         return self.published_at < other.published_at

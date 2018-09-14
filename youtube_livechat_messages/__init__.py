@@ -1,2 +1,3 @@
 from youtube_livechat_messages.api import API
 from youtube_livechat_messages.auth import get_access_token, get_credentials
+from youtube_livechat_messages.models import EventType
