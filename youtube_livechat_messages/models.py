@@ -1,24 +1,58 @@
 from youtube_livechat_messages.utils import isostr_to_datetime
 
 
+class EventType:
+    # Todo: Support more events
+    textMessageEvent = "textMessageEvent"
+    superChatEvent = "superChatEvent"
+    fanFundingEvent = "fanFundingEvent"
+
+
+class Author:
+
+    def __init__(self, author_json):
+        self.raw_json = author_json
+
+        self.channel_id = self.raw_json['channelId']
+        self.channel_url = self.raw_json['channel_url']
+        self.display_name = self.raw_json['display_name']
+        self.profile_image_url = self.raw_json['profile_image_url']
+        self.is_verified = self.raw_json['isVerified']
+        self.is_chat_owner = self.raw_json['isChatOwner']
+        self.is_chat_sponsor = self.raw_json['isChatSponsor']
+        self.is_chat_moderator = self.raw_json['isChatModerator']
+
+
 class LiveChatItem:
 
     def __init__(self, item_json):
-        self.raw = item_json
+        self.raw_json = item_json
 
-        self.id = item_json['id']
-        self.published_at = isostr_to_datetime(item_json['snippet']['publishedAt'])
-        self.display_message = item_json['snippet']['displayMessage']
+        self.id = self.raw_json['id']
+        self.published_at = isostr_to_datetime(self.raw_json['snippet']['publishedAt'])
+        self.author = Author(self.raw_json['authorDetails'])
 
-        self.type = item_json['snippet']['type']
-        if self.type == 'textMessageEvent':
-            self.details = item_json['snippet']['textMessageDetails']
-        elif self.type == 'superChatEvent':
-            self.details = item_json['snippet']['superChatDetails']
-        elif self.type == 'fanFundingEvent':
-            self.details = item_json['snippet']['fanFundingEvent']
+        self.type = self.raw_json['snippet']['type']
+        self.has_display_content = self.raw_json['snippet']['hasDisplayContent']
+
+    @property
+    def details(self):
+        if self.type == EventType.textMessageEvent:
+            return self.raw_json['snippet']['textMessageDetails']
+        elif self.type == EventType.superChatEvent:
+            return self.raw_json['snippet']['superChatDetails']
+        elif self.type == EventType.fanFundingEvent:
+            return self.raw_json['snippet']['fanFundingEvent']
+        return {
+            'Error': 'Unsupported EventType.'
+        }
+
+    @property
+    def display_message(self):
+        if self.has_display_content:
+            return self.raw_json['snippet']['displayMessage']
         else:
-            self.details = None
+            return ''
 
     def __lt__(self, other):
         return self.published_at < other.published_at
