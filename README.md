@@ -1,6 +1,11 @@
-# youtube-livestreaming-api-python
-youtube livestreaming API と言っても LiveChatMessages のみのラッパーだしそれも作りきれるか怪しい
+# youtube_livechat_messages
+Youtube LiveChatMessages list API wrapper.
 
+
+## Installation
+```sh
+pipenv install youtube_livechat_messages
+```
 
 ## Contributing
 バグ報告・要望・修正はIssues, PullRequests にお気軽に。
