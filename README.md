@@ -1,4 +1,6 @@
 # youtube_livechat_messages
+[![PyPI Version](https://img.shields.io/pypi/v/youtube_livechat_messages.svg)](https://pypi.python.org/pypi/youtube_livechat_messages)
+
 Youtube LiveChatMessages list API wrapper.
 
 ## Requirements
