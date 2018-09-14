@@ -27,13 +27,13 @@ class API:
     def refreshable(self):
         return self.credentials is not None
 
-    def cursor(self, live_chat_id=None, video_id=None, channel_id=None, raw=False):
+    def cursor(self, live_chat_id=None, video_id=None, channel_id=None):
         if not live_chat_id and not video_id and not channel_id:
             raise RuntimeError('You should set live_chat_id, video_id or channel_id')
         live_chat_id = live_chat_id or self.get_live_chat_id(video_id=video_id, channel_id=channel_id)
         api_request = APIRequest(self, params={'part': 'snippet,authorDetails,id', 'liveChatId': live_chat_id})
 
-        return LiveChatEventCursor(api_request, raw=raw)
+        return LiveChatEventCursor(api_request)
 
     def get_live_chat_id(self, video_id=None, channel_id=None):
         if not video_id and not channel_id:
