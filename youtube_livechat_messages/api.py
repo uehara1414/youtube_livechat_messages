@@ -25,7 +25,7 @@ class API:
 
     @property
     def refreshable(self):
-        return self.refreshable is not None
+        return self.credentials is not None
 
     def cursor(self, live_chat_id=None, video_id=None, channel_id=None, raw=False):
         if not live_chat_id and not video_id and not channel_id:
