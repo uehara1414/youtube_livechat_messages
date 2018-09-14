@@ -1,13 +1,25 @@
 from youtube_livechat_messages.cursor import LiveChatMessageCursor
+from youtube_livechat_messages.auth import auto_refresh
 
 import requests
 
 
 class API:
 
-    def __init__(self, access_token):
+    def __init__(self, access_token, credentials=None):
         self.access_token = access_token
         self._cursor = None
+        if credentials:
+            self.expired_at = credentials.token_expiry
+            self.client_id = credentials.client_id
+            self.client_secret = credentials.client_secret
+            self.refresh_token = credentials.refresh_token
+        else:
+            self.expired_at = None
+            self.client_id = None
+            self.client_secret = None
+            self.refresh_token = None
+        self.credentials = credentials
 
     def cursor(self, live_chat_id=None, video_id=None, raw=False):
         if not live_chat_id and not video_id:
@@ -54,4 +66,12 @@ class APIRequest:
         }
 
     def call(self):
-        return requests.get(self.url, params=self.params, headers=self.headers)
+        self.api.access_token, self.api.expired_at = auto_refresh(self.api.access_token,
+                                                                  self.api.client_id,
+                                                                  self.api.client_secret,
+                                                                  self.api.refresh_token,
+                                                                  self.api.expired_at)
+        res = requests.get(self.url, params=self.params, headers=self.headers)
+        if not res.ok:
+            raise RuntimeError()
+        return res
