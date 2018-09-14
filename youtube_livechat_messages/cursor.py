@@ -7,9 +7,8 @@ from youtube_livechat_messages.models import LiveChatEvent, EventType
 
 class LiveChatEventCursor:
 
-    def __init__(self, request, raw=False):
+    def __init__(self, request):
         self.request = request
-        self.raw = raw
 
     def events(self, include=None):
         return ChatEventIterator(self.request, include)
@@ -20,15 +19,35 @@ class LiveChatEventCursor:
     def super_chats(self):
         return ChatEventIterator(self.request, include=[EventType.superChatEvent])
 
-    def fun_fundings(self):
+    def fan_fundings(self):
         return ChatEventIterator(self.request, include=[EventType.fanFundingEvent])
+
+    def raw(self):
+        return RawChatEventCursor(request=self.request)
+
+
+class RawChatEventCursor:
+
+    def __init__(self, request):
+        self.request = request
+
+    def events(self, include=None):
+        return RawEventIterator(self.request, include)
+
+    def text_messages(self):
+        return RawEventIterator(self.request, include=[EventType.textMessageEvent])
+
+    def super_chats(self):
+        return RawEventIterator(self.request, include=[EventType.superChatEvent])
+
+    def fan_fundings(self):
+        return RawEventIterator(self.request, include=[EventType.fanFundingEvent])
 
 
 class ChatEventIterator:
 
-    def __init__(self, request, raw=False, include=None):
+    def __init__(self, request, include=None):
         self.request = request
-        self.raw = raw
         self.index = None
         self._items = collections.OrderedDict()
         self.include = include or []
@@ -72,7 +91,7 @@ class ChatEventIterator:
                 time.sleep(1)
                 self.update_events()
 
-    def __next__(self):
+    def __next__(self) -> LiveChatEvent:
         if not self._items:
             time.sleep(1)
             self.update_events()
@@ -80,10 +99,17 @@ class ChatEventIterator:
         self.wait_while_index_set()
 
         item = self.wait_for_next_item()
-        if self.raw:
-            return item.raw
-        else:
-            return item
+        return item
 
     def __iter__(self):
         return self
+
+
+class RawEventIterator(ChatEventIterator):
+
+    def __init__(self, request, include=None):
+        super().__init__(request, include=include)
+
+    def __next__(self) -> object:
+        item = super().__next__()
+        return item.raw_json

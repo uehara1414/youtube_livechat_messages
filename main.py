@@ -19,7 +19,7 @@ for super_chat in api.cursor(live_chat_id=os.getenv('LIVE_CHAT_ID')).super_chats
     # ...
 
 # get fan_fundings
-for super_chat in api.cursor(channel_id=os.getenv('CHANNEL_ID')).fun_fundings():
+for super_chat in api.cursor(channel_id=os.getenv('CHANNEL_ID')).fan_fundings():
     print(super_chat.author.display_name, super_chat.amount_display_string)
     # uehara1414 ¥200
     # ...
@@ -32,3 +32,9 @@ for event in api.cursor(video_id=os.getenv('VIDEO_ID')).events(include=[EventTyp
     elif event.type == EventType.fanFundingEvent:
         print(event.currency)
         # JPY
+
+# get raw event json
+for event in api.cursor(video_id=os.getenv('VIDEO_ID')).raw().events():
+    print(event['snippet']['type'], event['snippet']['displayMessage'])
+    # textMessageEvent Hello World
+
