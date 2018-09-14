@@ -1,6 +1,9 @@
 # youtube_livechat_messages
 Youtube LiveChatMessages list API wrapper.
 
+## Requirements
+- YouTube Data API v3 client_secret json file
+
 ## Installation
 ```sh
 pipenv install youtube_livechat_messages
