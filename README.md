@@ -1,7 +1,6 @@
 # youtube_livechat_messages
 Youtube LiveChatMessages list API wrapper.
 
-
 ## Installation
 ```sh
 pipenv install youtube_livechat_messages
@@ -87,6 +86,4 @@ for event in api.cursor(video_id=os.getenv('VIDEO_ID')).raw().events():
 ## Contributing
 個人的に必要な状況で十分に使える程度の実装しかしていません。
 
-足りない機能、不具合などたくさん有るかと思うので、バグ報告・要望・修正はIssues, PullRequests にお気軽に。
-
-気づいていないようであれば [uehara1414](https://twitter.com/uehara1414/)にDMかメンションしてください。
+足りない機能、不具合などたくさん有るかと思うので、バグ報告・要望・修正はIssues, PullRequests か、[uehara1414](https://twitter.com/uehara1414/)までお気軽に。
