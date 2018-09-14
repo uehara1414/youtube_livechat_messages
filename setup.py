@@ -2,7 +2,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(name='youtube_livechat_messages',
-      version='0.0.1',
+      version='0.0.2',
       description='Youtube LiveChatMessages API wrapper ',
       author='uehara1414',
       author_email='akiya.noface@gmail.com',
