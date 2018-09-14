@@ -1,10 +1,13 @@
+from youtube_livechat_messages.utils import isostr_to_datetime
+
+
 class LiveChatItem:
 
     def __init__(self, item_json):
         self.raw = item_json
 
         self.id = item_json['id']
-        self.published_at = item_json['snippet']['publishedAt']
+        self.published_at = isostr_to_datetime(item_json['snippet']['publishedAt'])
         self.display_message = item_json['snippet']['displayMessage']
 
         self.type = item_json['snippet']['type']

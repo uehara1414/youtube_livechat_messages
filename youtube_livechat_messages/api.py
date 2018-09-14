@@ -49,7 +49,7 @@ class API:
             if item['snippet']['liveBroadcastContent'] == 'live':
                 return item['id']['videoId']
         else:
-            raise RuntimeError('LiveBroadcast Not Found.')
+            raise RuntimeError('The LiveBroadcast Not Found.')
 
     def get_live_chat_id_from_video_id(self, video_id):
         request = APIRequest(self, "https://www.googleapis.com/youtube/v3/videos", params={
@@ -58,7 +58,10 @@ class API:
         })
         res = request.call()
 
-        return res.json()['items'][0]['liveStreamingDetails']['activeLiveChatId']
+        try:
+            return res.json()['items'][0]['liveStreamingDetails']['activeLiveChatId']
+        except IndexError:
+            raise RuntimeError('The LiveChat Not Found.')
 
 
 class APIRequest:
