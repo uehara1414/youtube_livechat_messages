@@ -6,20 +6,26 @@ import requests
 
 class API:
 
-    def __init__(self, access_token, credentials=None):
-        self.access_token = access_token
-        self._cursor = None
+    def __init__(self, access_token=None, credentials=None):
+        if not access_token and not credentials:
+            raise RuntimeError('You should set access_token or credentials')
         if credentials:
+            self.access_token = credentials.access_token
             self.expired_at = credentials.token_expiry
             self.client_id = credentials.client_id
             self.client_secret = credentials.client_secret
             self.refresh_token = credentials.refresh_token
         else:
+            self.access_token = access_token
             self.expired_at = None
             self.client_id = None
             self.client_secret = None
             self.refresh_token = None
         self.credentials = credentials
+
+    @property
+    def refreshable(self):
+        return self.refreshable is not None
 
     def cursor(self, live_chat_id=None, video_id=None, channel_id=None, raw=False):
         if not live_chat_id and not video_id and not channel_id:
@@ -69,12 +75,15 @@ class APIRequest:
         }
 
     def call(self):
-        self.api.access_token, self.api.expired_at = auto_refresh(self.api.access_token,
-                                                                  self.api.client_id,
-                                                                  self.api.client_secret,
-                                                                  self.api.refresh_token,
-                                                                  self.api.expired_at)
+        if self.api.refreshable:
+            self.api.access_token, self.api.expired_at = auto_refresh(self.api.access_token,
+                                                                      self.api.client_id,
+                                                                      self.api.client_secret,
+                                                                      self.api.refresh_token,
+                                                                      self.api.expired_at)
+
         res = requests.get(self.url, params=self.params, headers=self.headers)
+
         if not res.ok:
             raise RuntimeError()
         return res
