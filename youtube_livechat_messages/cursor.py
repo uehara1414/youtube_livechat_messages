@@ -25,8 +25,6 @@ class LiveChatMessageCursor:
             item = LiveChatItem(item)
             self._items[item.id] = item
 
-        print('.')
-
     def wait_while_index_set(self):
         while True:
             if self.index is None:
