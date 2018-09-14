@@ -7,8 +7,6 @@ access_token = get_access_token()
 credentials = get_credentials()
 
 api = API(access_token, credentials)
-live_chat_id = api.get_live_chat_id_from_video_id(os.getenv('VIDEO_ID'))
 
-
-for item in api.cursor(live_chat_id):
+for item in api.cursor(video_id=os.getenv('VIDEO_ID')):
     print(item)

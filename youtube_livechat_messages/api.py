@@ -21,12 +21,16 @@ class API:
             self.refresh_token = None
         self.credentials = credentials
 
-    def cursor(self, live_chat_id=None, video_id=None, raw=False):
-        if not live_chat_id and not video_id:
+    def cursor(self, live_chat_id=None, video_id=None, channel_id=None, raw=False):
+        if not live_chat_id and not video_id and not channel_id:
             raise RuntimeError()
+        if channel_id:
+            video_id = self.get_video_id_from_channel_id(channel_id)
         if video_id:
-            raise NotImplementedError()
+            live_chat_id = self.get_live_chat_id_from_video_id(video_id)
+
         api_request = APIRequest(self, params={'part': 'snippet,authorDetails,id', 'liveChatId': live_chat_id})
+
         return LiveChatMessageCursor(api_request, raw=raw)
 
     def get_video_id_from_channel_id(self, channel_id):
@@ -39,8 +43,7 @@ class API:
             if item['snippet']['liveBroadcastContent'] == 'live':
                 return item['id']['videoId']
         else:
-            # fixme: raise Error
-            return 'not found.'
+            raise RuntimeError('LiveBroadcast Not Found.')
 
     def get_live_chat_id_from_video_id(self, video_id):
         request = APIRequest(self, "https://www.googleapis.com/youtube/v3/videos", params={
