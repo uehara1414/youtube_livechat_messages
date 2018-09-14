@@ -24,4 +24,4 @@ class LiveChatItem:
         return self.published_at < other.published_at
 
     def __str__(self):
-        return f'{self.id[:5]} {self.type}: {self.display_message} at {self.published_at}'
+        return f'LiveChatItem({self.type}: "{self.display_message}")'

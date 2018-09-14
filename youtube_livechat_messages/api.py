@@ -29,15 +29,21 @@ class API:
 
     def cursor(self, live_chat_id=None, video_id=None, channel_id=None, raw=False):
         if not live_chat_id and not video_id and not channel_id:
-            raise RuntimeError()
+            raise RuntimeError('You should set live_chat_id, video_id or channel_id')
+        live_chat_id = live_chat_id or self.get_live_chat_id(video_id=video_id, channel_id=channel_id)
+        api_request = APIRequest(self, params={'part': 'snippet,authorDetails,id', 'liveChatId': live_chat_id})
+
+        return LiveChatMessageCursor(api_request, raw=raw)
+
+    def get_live_chat_id(self, video_id=None, channel_id=None):
+        if not video_id and not channel_id:
+            raise RuntimeError('')
+        live_chat_id = None
         if channel_id:
             video_id = self.get_video_id_from_channel_id(channel_id)
         if video_id:
             live_chat_id = self.get_live_chat_id_from_video_id(video_id)
-
-        api_request = APIRequest(self, params={'part': 'snippet,authorDetails,id', 'liveChatId': live_chat_id})
-
-        return LiveChatMessageCursor(api_request, raw=raw)
+        return live_chat_id
 
     def get_video_id_from_channel_id(self, channel_id):
         request = APIRequest(self, "https://www.googleapis.com/youtube/v3/search", params={
