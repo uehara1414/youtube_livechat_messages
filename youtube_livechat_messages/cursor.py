@@ -7,6 +7,25 @@ from youtube_livechat_messages.models import LiveChatEvent, EventType
 
 class LiveChatEventCursor:
 
+    def __init__(self, request, raw=False):
+        self.request = request
+        self.raw = raw
+
+    def events(self, include=None):
+        return ChatEventIterator(self.request, include)
+
+    def text_messages(self):
+        return ChatEventIterator(self.request, include=[EventType.textMessageEvent])
+
+    def super_chats(self):
+        return ChatEventIterator(self.request, include=[EventType.superChatEvent])
+
+    def fun_fundings(self):
+        return ChatEventIterator(self.request, include=[EventType.fanFundingEvent])
+
+
+class ChatEventIterator:
+
     def __init__(self, request, raw=False, include=None):
         self.request = request
         self.raw = raw
@@ -39,9 +58,6 @@ class LiveChatEventCursor:
             else:
                 return
 
-    def __iter__(self):
-        return self
-
     def wait_for_next_item(self):
         while True:
             item_iter = itertools.dropwhile(lambda item_id: item_id != self.index, self._items)
@@ -69,18 +85,5 @@ class LiveChatEventCursor:
         else:
             return item
 
-    def events(self, include=None):
-        self.include = include or []
-        return self
-
-    def super_chats(self):
-        self.include = [EventType.superChatEvent]
-        return self
-
-    def text_messages(self):
-        self.include = [EventType.textMessageEvent]
-        return self
-
-    def fun_fundings(self):
-        self.include = [EventType.fanFundingEvent]
+    def __iter__(self):
         return self
